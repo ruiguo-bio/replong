@@ -150,7 +150,6 @@ do
 					done
 					wait
 					rm ${line}_*.edge
-					rm ${line}.bed
 					find . -name "${line}_[0-9][0-9].bed" -delete
 					fi
 				fi
