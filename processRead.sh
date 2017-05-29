@@ -72,7 +72,7 @@ do
 			sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
 		done
 		wait
-		rm ${line}_*.edge
+		rm ${line}*.edge
 		rm ${line}.bed
 		find . -name "${line}_[0-9][0-9].bed" -delete
 		fi
@@ -124,7 +124,7 @@ do
 						sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
 					done
 					wait
-					rm ${line}_*.edge
+					rm ${line}*.edge
 					rm ${line}.bed
 					find . -name "${line}_[0-9][0-9].bed" -delete
 					fi
@@ -149,7 +149,7 @@ do
 						sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
 					done
 					wait
-					rm ${line}_*.edge
+					rm ${line}*.edge
 					find . -name "${line}_[0-9][0-9].bed" -delete
 					fi
 				fi
@@ -157,7 +157,7 @@ do
 				printf "last file and not combine\n"
 				file=${line}.edge
 				awk '{print $0,NR}' $file > ${file}_new
-				rm $file
+				#rm $file
 				mv ${file}_new ${line}_00.edge
 				mv ${line}.bed ${line}_00.bed
 				printf "find community in the graph\n"
@@ -175,8 +175,8 @@ do
 					sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
 				done
 				wait
-				rm ${line}_*.edge
-				find . -name "${line}_[0-9][0-9].bed" -delete
+				#rm ${line}*.edge
+				#find . -name "${line}_[0-9][0-9].bed" -delete
 				fi
 			fi
 		else
@@ -223,7 +223,7 @@ do
 						sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
 					done
 					wait
-					rm ${line}_*.edge
+					rm ${line}*.edge
 					rm ${line}.bed
 					find . -name "${line}_[0-9][0-9].bed" -delete
 					fi
@@ -252,7 +252,7 @@ do
 						sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
 					done
 					wait
-					rm ${line}_*.edge
+					rm ${line}*.edge
 					find . -name "${line}_[0-9][0-9].bed" -delete
 					fi
 				fi
@@ -283,7 +283,7 @@ do
 			sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
 		done
 		wait
-		rm ${line}_*.edge
+		rm ${line}*.edge
 		find . -name ${line}_[0-9][0-9].bed -delete
 		fi
 	fi
@@ -305,9 +305,17 @@ else
 rm -rf correction/1-overlapper/blocks
 rm -rf correction/1-overlapper/queries
 cut -d " " -f1 merged.bed > merged.line
-Rscript --vanilla  ${DIR}/linenum.R merged.line
+split merged.line -l 3500 -d merged_ --additional-suffix=.line
+for file in $(ls merged_*.line)
+do
+	Rscript --vanilla  ${DIR}/linenum.R $file 
+done
 printf "Find original read names\n"
-sed -n $(cat merged.line.sed) correction/step1.gkpStore/readNames.txt > merged.name
+for file in $(ls merged_*.sed)
+do
+	sed -n $(cat $file) correction/step1.gkpStore/readNames.txt > ${file}.name
+done
+cat *.name > merged.name
 paste <(cut -f2 merged.name) <(cut -d " " -f2-3 merged.bed) > merged.name.bed
 awk '{if($3 > $2) print $0}' merged.name.bed > merged.name.bed1
 mv merged.name.bed1 merged.name.bed
@@ -318,7 +326,13 @@ fi
 newSize=$(du new.fa | cut -f1)
 printf "%s\n" $newSize
 printf "use ovl to find overlap\n"
-canu -correct -p "step2" -d "temp" genomeSize="$newSize" coroutcoverage=400 cormincoverage=0 overlapper=ovl gnuplottested=true minreadlength=100 minoverlaplength=20 stopafter=overlap -pacbio-corrected new.fa
+if ((newSize/10))>100
+then 
+	newSize=$((newSize*100)) 
+else
+	newSize=1M
+fi
+canu -correct -p "step2" -d "temp" genomeSize=$newSize coroutcoverage=400 cormincoverage=0 overlapper=ovl gnuplottested=true minreadlength=100 minoverlaplength=20 stopafter=overlap -pacbio-corrected new.fa
 if [ -e all.out ]
 then
 	rm all.out
@@ -335,23 +349,47 @@ python ${DIR}/edge_1.py all.ovl temp/correction/step2.gkpStore/reads.txt $fromle
 printf "use community detection to merge repeat\n"
 Rscript --vanilla  ${DIR}/merge.R
 awk '{print $1,$5,$6}'  all.ovl > new.bed
-sed -n $(cat new.line.sed) new.bed | sort -k1,1n > new_filter.bed
-cut -d " " -f1 new_filter.bed > new_filter.line
-Rscript --vanilla  ${DIR}/linenum.R new_filter.line
-#Rscript --vanilla  ${DIR}/linenum.R leftread.line
+for file in $(ls new_*.line)
+do
+	Rscript --vanilla ~/replong/linenum.R $file
+done
+for file in $(ls new_*.sed)
+do
+	name=${file#new_}
+	name=${name%.line.sed}
+	sed -n $(cat $file) new.bed > new_${name}.bed &
+done
+wait
+for file in $(ls new_*.bed)
+do
+	name=${file#new_}
+	name=${name%.bed}
+	sort -k1,1n $file > new_${name}_sorted.bed &
+done
+wait
+
+for file in $(ls new_*_sorted.bed)
+do
+	name=${file#new_}
+        name=${name%_sorted.bed}
+	cut -d " " -f1 $file > new_${name}_sorted.line
+	Rscript --vanilla  ${DIR}/linenum.R  new_${name}_sorted.line
+	sed -n $(cat new_${name}_sorted.line.sed) temp/correction/step2.gkpStore/readNames.txt > new_${name}_sorted.name
+done
+
 printf "Find original read names\n"
-sed -n $(cat new_filter.line.sed) temp/correction/step2.gkpStore/readNames.txt > new_filter.name
-#sed -n $(cat leftread.line.sed) temp/correction/step2.gkpStore/readNames.txt | cut -f2 > leftread.name
-paste <(cut -f2 new_filter.name) <(cut -d " " -f2-3 new_filter.bed) > new.name.bed
+cat new_*.name > new_sorted.name
+
+cat  new_*_sorted.bed > new_sorted.bed
+
+
+paste <(cut -f2 new_sorted.name) <(cut -d " " -f2-3 new_sorted.bed) > new.name.bed
 printf "extract repeat sequences\n"
-#samtools faidx new.fa
-#cat leftread.name | xargs -n 1 samtools faidx new.fa > part1.fa
 faidx -b new.name.bed new.fa > result.fa
-#cat part*.fa > result.fa
-mv result.fa ${home}/
+awk '/^>/{print ">" ++i; next}{print}' < result.fa > rename.fa
+rm result.fa
+mv rename.fa result.fa
+cp result.fa ${home}/
 echo $temp
 #rm -rf temp
-#rm -rf ../correction
-#rm ../*.mhap
-#echo $parameters >> ${home}/${outputfile}
 }

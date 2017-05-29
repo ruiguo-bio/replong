@@ -12,6 +12,11 @@ To install canu, follow the instruction below:
 After compiling, canu should be add to the user path for RepLong to call.
 
 ## Run:
-	./replong/replong.sh -f <long reads input> -s <an estimate of the whole genome size> -t <place of temporary files>  
+	./replong.sh -f <long reads input> -s <an estimate of the whole genome size> -t <place of temporary files>  
 
-The result fasta file will be place in the same folder of your current folder, and the temporary files will be deleted.
+For example,
+	./replong.sh -f dmel.polished.fa -s 165M  -t ~/temp
+
+Please replace the "./replong.sh" with the actual path of replong to run it.
+
+The result fasta file will be place in the current folder, and the temporary files will be deleted.

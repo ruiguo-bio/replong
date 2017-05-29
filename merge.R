@@ -37,5 +37,6 @@ lines <- sapply(commu_names,printCommunity)
 lines = sort(lines)
 lines =unique(lines)
 
-alllines = paste(paste(as.character(lines),collapse = "p;"),"p",sep ="")
-write(alllines,file='new.line.sed')
+#alllines = paste(paste(as.character(lines),collapse = "p;"),"p",sep ="")
+#write(alllines,file='new.line.sed')
+write.table(lines,file='new.line',row.names = FALSE,col.names = FALSE)

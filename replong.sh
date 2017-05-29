@@ -4,9 +4,8 @@ DIR=$( cd $(dirname $0) ; pwd -P )
 printf "script path = %s\n" $DIR
 #source ${DIR}/generateFasta.sh
 source ${DIR}/processRead.sh 
-source ${DIR}/evaluation2.sh
 # set flog vars to empty
-lines=65000000 genomeSize= range=250 file= temp= lendiff=200 fromlen=250 ratio=0.96 drops=3 n1=3 n2=8 degree=10 commu_size=10 window=100 cor=false breaks=200 outputfile=
+lines=65000000 genomeSize= range=250 file= temp= lendiff=200 fromlen=250 ratio=0.96 drops=3 n1=3 n2=8 degree=10 commu_size=10 window=100 cor=false breaks=200 outputfile="replong.log"
 while getopts f:s:n:l:t:b:q:w:d:x:c:g:a:m:z:u: opt
 do
 	case $opt in
@@ -102,21 +101,21 @@ done
 shift $((OPTIND - 1))
 printf "file=%s\n" $file
 printf "genomeSize=%s\n" $genomeSize
-printf "range=%s\n"	$range
+#printf "range=%s\n"	$range
 printf "correction=%s\n" $cor
-printf "lines=%s\n" $lines
-printf "temp=%s\n" ${temp}
-printf "breaks=%d\n" ${breaks}
-printf "n1=%d\n" $n1
-printf "n2=%d\n" $n2
-printf "degree=%d\n" $degree
-printf "commu_size=%d\n" $commu_size
-printf "drops=%d\n" $drops
-printf "lendiff=%d\n" $lendiff
-printf "ratio=%s\n" $ratio
-printf "window=%d\n" $window
-printf "fromlen=%d\n" $fromlen
-printf "outputfile=%s\n" $outputfile
+#printf "lines=%s\n" $lines
+printf "temp folder=%s\n" ${temp}
+#printf "breaks=%d\n" ${breaks}
+#printf "n1=%d\n" $n1
+#printf "n2=%d\n" $n2
+#printf "degree=%d\n" $degree
+#printf "commu_size=%d\n" $commu_size
+#printf "drops=%d\n" $drops
+#printf "lendiff=%d\n" $lendiff
+#printf "ratio=%s\n" $ratio
+#printf "window=%d\n" $window
+#printf "fromlen=%d\n" $fromlen
+#printf "outputfile=%s\n" $outputfile
 home=$(pwd)
 orifile=$file 
 printf "original place=%s\n" $home
@@ -148,3 +147,8 @@ echo $parameters >> ${home}/${outputfile}
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds elapsed." >> ${home}/${outputfile}
 #evaluation
+rm -rf correction
+rm -rf temp
+rm *.bed
+rm *.line
+cd $home
