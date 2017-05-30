@@ -349,6 +349,7 @@ python ${DIR}/edge_1.py all.ovl temp/correction/step2.gkpStore/reads.txt $fromle
 printf "use community detection to merge repeat\n"
 Rscript --vanilla  ${DIR}/merge.R
 awk '{print $1,$5,$6}'  all.ovl > new.bed
+split new.line -l 500 -d new_ --additional-suffix=.line 
 for file in $(ls new_*.line)
 do
 	Rscript --vanilla ~/replong/linenum.R $file

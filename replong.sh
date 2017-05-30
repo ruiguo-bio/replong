@@ -5,7 +5,7 @@ printf "script path = %s\n" $DIR
 #source ${DIR}/generateFasta.sh
 source ${DIR}/processRead.sh 
 # set flog vars to empty
-lines=65000000 genomeSize= range=250 file= temp= lendiff=200 fromlen=250 ratio=0.96 drops=3 n1=3 n2=8 degree=10 commu_size=10 window=100 cor=false breaks=200 outputfile="replong.log"
+lines=65000000 genomeSize= range=250 file= temp= lendiff=200 fromlen=250 ratio=0.96 drops=3 n1=3 n2=8 degree=10 commu_size=10 window=100 cor=false breaks=200 outputfile="replong.log" canuPath="" faidxPath=""
 while getopts f:s:n:l:t:b:q:w:d:x:c:g:a:m:z:u: opt
 do
 	case $opt in
@@ -65,13 +65,13 @@ do
 			((OPTIND--))  
 			continue
 			fi
-			commu_size=$OPTARG
+			canuPath=$OPTARG
 			;;
 		a)	if [[ $OPTARG = -* ]]; then
 			((OPTIND--))  
 			continue
 			fi
-			ratio=$OPTARG
+			faidxPath=$OPTARG
 			;;
 		g)	if [[ $OPTARG = -* ]]; then
 			((OPTIND--))  
@@ -116,39 +116,50 @@ printf "temp folder=%s\n" ${temp}
 #printf "window=%d\n" $window
 #printf "fromlen=%d\n" $fromlen
 #printf "outputfile=%s\n" $outputfile
+printf "canu path is %s\n" $canuPath
+printf "faidx path is %s\n" $faidxPath
 home=$(pwd)
 orifile=$file 
 printf "original place=%s\n" $home
 #parameters=${cor}${orifile}
 mkdir $temp
-if [ $cor = true ]
+if [ -z $canuPath ]
 then
-	
-	printf "Use raw reads\n"
-	canu -correct -p "step1" -d $temp genomeSize="$genomeSize"  saveReadCorrections=T corOutCoverage=400 gnuplotTested=true corMinCoverage=0 -pacbio-raw "$file"
-	printf "the folder is %s\n" $temp
-	cd $temp
-	printf "process reads\n"
-	processRead
-else
-	printf "Use corrected reads\n"
-	canu -correct -p "step1" -d $temp genomeSize="$genomeSize" corOutCoverage=400 gnuplotTested=true corMinCoverage=0  stopAfter=overlap -pacbio-corrected "$file"
-	printf "the folder is %s\n" $temp
-	cd $temp
-	printf "process reads\n"
-	processRead
-fi	
-#mkdir result
-#mv result.fasta ${home}/
+	canuPath=$(which canu)	
+fi
+if [ -z $faidxPath ]
+then
+	faidxPath=$(which faidx)	
+fi
+
+#if [ $cor = true ]
+#then
+#	
+#	printf "Use raw reads\n"
+#	canu -correct -p "step1" -d $temp genomeSize="$genomeSize"  saveReadCorrections=T corOutCoverage=400 gnuplotTested=true corMinCoverage=0 -pacbio-raw "$file"
+#	printf "the folder is %s\n" $temp
+#	cd $temp
+#	printf "process reads\n"
+#	processRead
+#else
+#	printf "Use corrected reads\n"
+#	canu -correct -p "step1" -d $temp genomeSize="$genomeSize" corOutCoverage=400 gnuplotTested=true corMinCoverage=0  stopAfter=overlap -pacbio-corrected "$file"
+#	printf "the folder is %s\n" $temp
+#	cd $temp
+#	printf "process reads\n"
+#	processRead
+#fi	
+##mkdir result
+##mv result.fasta ${home}/
+##rm -rf temp
+##rm -rf ../correction
+##rm ../*.mhap
+#echo $parameters >> ${home}/${outputfile}
+#duration=$SECONDS
+#echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds elapsed." >> ${home}/${outputfile}
+##evaluation
+#rm -rf correction
 #rm -rf temp
-#rm -rf ../correction
-#rm ../*.mhap
-echo $parameters >> ${home}/${outputfile}
-duration=$SECONDS
-echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds elapsed." >> ${home}/${outputfile}
-#evaluation
-rm -rf correction
-rm -rf temp
-rm *.bed
-rm *.line
-cd $home
+#rm *.bed
+#rm *.line
+#cd $home
