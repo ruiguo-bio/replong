@@ -14,7 +14,7 @@ After compiling, canu and faidx path should be add to the user path or set in th
 ## Run:
 	./replong.sh -f <long reads input> -s <an estimate of the whole genome size> -t <place of temporary files>  -u <canu path> -a <faidx path> 
 
-For example,
+For example:
 	./replong.sh -f dmel.polished.fa -s 165M  -t ~/temp -u ~/software/canu-1.4/Linux-amd64/bin//canu -a /usr/local/bin/faidx
 
 Please replace the "./replong.sh" with the actual path of replong to run it and specify an empty folder for the temp file.
