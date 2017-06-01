@@ -124,25 +124,27 @@ printf "original place=%s\n" $home
 mkdir $temp
 if [ -z $canuPath ]
 then
-	canuPath=$(which canu)	
+	canuPath=$(command -v canu)	
+	canuPath=${canuPath%canu}
 fi
 if [ -z $faidxPath ]
 then
-	faidxPath=$(which faidx)	
+	faidxPath=$(command -v faidx)	
+	faidxPath=${faidxPath%faidx}
 fi
 
 if [ $cor = true ]
 then
 	
 	printf "Use raw reads\n"
-	canu -correct -p "step1" -d $temp genomeSize="$genomeSize"  saveReadCorrections=T corOutCoverage=400 gnuplotTested=true corMinCoverage=0 -pacbio-raw "$file"
+	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize"  saveReadCorrections=T corOutCoverage=400 gnuplotTested=true corMinCoverage=0 -pacbio-raw "$file"
 	printf "the folder is %s\n" $temp
 	cd $temp
 	printf "process reads\n"
 	processRead
 else
 	printf "Use corrected reads\n"
-	canu -correct -p "step1" -d $temp genomeSize="$genomeSize" corOutCoverage=400 gnuplotTested=true corMinCoverage=0  stopAfter=overlap -pacbio-corrected "$file"
+	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize" corOutCoverage=400 gnuplotTested=true corMinCoverage=0  stopAfter=overlap -pacbio-corrected "$file"
 	printf "the folder is %s\n" $temp
 	cd $temp
 	printf "process reads\n"
@@ -151,8 +153,5 @@ fi
 echo $parameters >> ${home}/${outputfile}
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds elapsed." >> ${home}/${outputfile}
-rm -rf correction
-rm -rf temp
-rm *.bed
-rm *.line
+rm -rf $temp
 cd $home

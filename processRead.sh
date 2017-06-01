@@ -18,8 +18,8 @@ do
 	printf "it's the %d file\n" $j
 	line=$(basename $i .ovb | sed 's/^0*//')
 	printf "the file name is %d\n" $line
-	printf "overlapConvert\n"
-	overlapConvert -G correction/step1.gkpStore -coords $i  >${line}.ovl
+	printf "$canuPath/overlapConvert\n"
+	$canuPath/overlapConvert -G correction/step1.gkpStore -coords $i  >${line}.ovl
 #	rm $i
 
 	printf "make edge file\n"
@@ -300,7 +300,7 @@ cat  correction/2-correction/correction_outputs/*.fasta > all.fa
 rm -rf correction/2-correction/correction_outputs
 rm -rf correction/1-overlapper/queries
 awk '{id="read"$1"_0";print id,$2,$3}' merged.bed > merged.new.bed
-faidx -b merged.new.bed -l all.fa > new.fa
+$faidxPath/faidx -b merged.new.bed -l all.fa > new.fa
 else
 rm -rf correction/1-overlapper/blocks
 rm -rf correction/1-overlapper/queries
@@ -321,7 +321,7 @@ awk '{if($3 > $2) print $0}' merged.name.bed > merged.name.bed1
 mv merged.name.bed1 merged.name.bed
 printf "extract repeat sequences\n"
 printf "orifile=%s\n" $home/$orifile
-faidx -b merged.name.bed -l $home/$orifile > new.fa
+$faidxPath/faidx -b merged.name.bed -l $home/$orifile > new.fa
 fi
 newSize=$(du new.fa | cut -f1)
 printf "%s\n" $newSize
@@ -332,7 +332,7 @@ then
 else
 	newSize=1M
 fi
-canu -correct -p "step2" -d "temp" genomeSize=$newSize coroutcoverage=400 cormincoverage=0 overlapper=ovl gnuplottested=true minreadlength=100 minoverlaplength=20 stopafter=overlap -pacbio-corrected new.fa
+$canuPath/canu -correct -p "step2" -d "temp" genomeSize=$newSize coroutcoverage=400 cormincoverage=0 overlapper=ovl gnuplottested=true minreadlength=100 minoverlaplength=20 stopafter=overlap -pacbio-corrected new.fa
 if [ -e all.out ]
 then
 	rm all.out
@@ -341,7 +341,7 @@ for i in temp/correction/1-overlapper/001/*.ovb
 do
 
 	echo $i
-	overlapConvert -G temp/correction/step2.gkpStore -coords ${i}  >> all.ovl ;
+	$canuPath/overlapConvert -G temp/correction/step2.gkpStore -coords ${i}  >> all.ovl ;
 done
 
 printf "filter overlap file to merge repeat\n"
@@ -386,7 +386,7 @@ cat  new_*_sorted.bed > new_sorted.bed
 
 paste <(cut -f2 new_sorted.name) <(cut -d " " -f2-3 new_sorted.bed) > new.name.bed
 printf "extract repeat sequences\n"
-faidx -b new.name.bed new.fa > result.fa
+$faidxPath/faidx -b new.name.bed new.fa > result.fa
 awk '/^>/{print ">" ++i; next}{print}' < result.fa > rename.fa
 rm result.fa
 mv rename.fa result.fa
