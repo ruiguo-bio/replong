@@ -18,11 +18,13 @@ do
 			continue
 			fi
 			minReadLength=$OPTARG
+			;;
 		o)	if [[ $OPTARG = -* ]]; then
 			((OPTIND--))
 			continue
 			fi
 			minOverlapLength=$OPTARG
+			;;
 		n)	if [[ $OPTARG = -* ]]; then
 			((OPTIND--))
 			continue
@@ -132,19 +134,14 @@ printf "temp folder=%s\n" ${temp}
 #printf "window=%d\n" $window
 #printf "fromlen=%d\n" $fromlen
 #printf "outputfile=%s\n" $outputfile
-printf "canu path is %s\n" $canuPath
-printf "min Read Length is %s\n" $minReadLength
-printf "min Overlap Length is %s\n" $minOverlapLength
-printf "faidx path is %s\n" $faidxPath
-printf "java path is %s\n" $javaPath
 home=$(pwd)
 orifile=$file 
 printf "original place=%s\n" $home
 mkdir $temp
 if [ -z $javaPath ]
 then
-	javaPath=$(command -v canu)	
-	javaPath=${canuPath%canu}
+	javaPath=$(command -v java)	
+	javaPath=${javaPath%java}
 fi
 if [ -z $canuPath ]
 then
@@ -157,18 +154,23 @@ then
 	faidxPath=${faidxPath%faidx}
 fi
 
+printf "canu path is %s\n" $canuPath
+printf "min Read Length is %s\n" $minReadLength
+printf "min Overlap Length is %s\n" $minOverlapLength
+printf "faidx path is %s\n" $faidxPath
+printf "java path is %s\n" $javaPath
 if [ $cor = true ]
 then
 	
 	printf "Use raw reads\n"
-	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize"  saveReadCorrections=T corOutCoverage=400 gnuplotTested=true corMinCoverage=0 -pacbio-raw "$file"
+	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize"  saveReadCorrections=T corOutCoverage=400 gnuplotTested=true minReadLength=$minReadLength minOverlapLength=$minOverlapLength corMinCoverage=0 -pacbio-raw "$file"
 	printf "the folder is %s\n" $temp
 	cd $temp
 	printf "process reads\n"
 	processRead
 else
 	printf "Use corrected reads\n"
-	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize" corOutCoverage=400 gnuplotTested=true corMinCoverage=0  stopAfter=overlap -pacbio-corrected "$file"
+	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize" corOutCoverage=400 gnuplotTested=true corMinCoverage=0 minReadLength=$minReadLength minOverlapLength=$minOverlapLength  stopAfter=overlap -pacbio-corrected "$file"
 	printf "the folder is %s\n" $temp
 	cd $temp
 	printf "process reads\n"
