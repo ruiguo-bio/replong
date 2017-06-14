@@ -5,19 +5,35 @@ printf "script path = %s\n" $DIR
 #source ${DIR}/generateFasta.sh
 source ${DIR}/processRead.sh 
 # set flog vars to empty
-lines=65000000 genomeSize= range=250 file= temp= lendiff=200 fromlen=250 ratio=0.96 drops=3 n1=3 n2=8 degree=10 commu_size=10 window=100 cor=false breaks=200 outputfile="replong.log" canuPath="" faidxPath=""
-while getopts f:s:n:l:t:b:q:w:d:x:c:g:a:m:z:u: opt
+lines=65000000 genomeSize= range=250 file= temp= lendiff=200 fromlen=250 ratio=0.96 drops=3 n1=3 n2=8 degree=10 commu_size=10 window=100 cor=false breaks=200 outputfile="replong.log" canuPath="" faidxPath="" javaPath="" minOverlapLength=500 minReadLength=1000
+while getopts f:o:r:s:n:l:t:j:b:q:w:d:x:c:g:a:m:z:u: opt
 do
 	case $opt in
 		f)	file=$OPTARG
 			;;
 		s)	genomeSize=$OPTARG
 			;;
+		r)	if [[ $OPTARG = -* ]]; then
+			((OPTIND--))
+			continue
+			fi
+			minReadLength=$OPTARG
+		o)	if [[ $OPTARG = -* ]]; then
+			((OPTIND--))
+			continue
+			fi
+			minOverlapLength=$OPTARG
 		n)	if [[ $OPTARG = -* ]]; then
 			((OPTIND--))
 			continue
 			fi
 			range=$OPTARG
+			;;
+		j)	if [[ $OPTARG = -* ]]; then
+			((OPTIND--))  
+			continue
+			fi
+			javaPath=$OPTARG
 			;;
 		l)	if [[ $OPTARG = -* ]]; then
 			((OPTIND--))  
@@ -117,11 +133,19 @@ printf "temp folder=%s\n" ${temp}
 #printf "fromlen=%d\n" $fromlen
 #printf "outputfile=%s\n" $outputfile
 printf "canu path is %s\n" $canuPath
+printf "min Read Length is %s\n" $minReadLength
+printf "min Overlap Length is %s\n" $minOverlapLength
 printf "faidx path is %s\n" $faidxPath
+printf "java path is %s\n" $javaPath
 home=$(pwd)
 orifile=$file 
 printf "original place=%s\n" $home
 mkdir $temp
+if [ -z $javaPath ]
+then
+	javaPath=$(command -v canu)	
+	javaPath=${canuPath%canu}
+fi
 if [ -z $canuPath ]
 then
 	canuPath=$(command -v canu)	
