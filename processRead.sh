@@ -300,7 +300,7 @@ cat  correction/2-correction/correction_outputs/*.fasta > all.fa
 rm -rf correction/2-correction/correction_outputs
 rm -rf correction/1-overlapper/queries
 awk '{id="read"$1"_0";print id,$2,$3}' merged.bed > merged.new.bed
-$faidxPath/faidx -b merged.new.bed -l all.fa > new.fa
+$faidxPath -b merged.new.bed -l all.fa > new.fa
 else
 rm -rf correction/1-overlapper/blocks
 rm -rf correction/1-overlapper/queries
@@ -321,7 +321,7 @@ awk '{if($3 > $2) print $0}' merged.name.bed > merged.name.bed1
 mv merged.name.bed1 merged.name.bed
 printf "extract repeat sequences\n"
 printf "orifile=%s\n" $home/$orifile
-$faidxPath/faidx -b merged.name.bed -l $home/$orifile > new.fa
+$faidxPath -b merged.name.bed -l $home/$orifile > new.fa
 fi
 newSize=$(du new.fa | cut -f1)
 printf "%s\n" $newSize
@@ -386,7 +386,7 @@ cat  new_*_sorted.bed > new_sorted.bed
 
 paste <(cut -f2 new_sorted.name) <(cut -d " " -f2-3 new_sorted.bed) > new.name.bed
 printf "extract repeat sequences\n"
-$faidxPath/faidx -b new.name.bed new.fa > result.fa
+$faidxPath -b new.name.bed new.fa > result.fa
 awk '/^>/{print ">" ++i; next}{print}' < result.fa > rename.fa
 rm result.fa
 mv rename.fa result.fa

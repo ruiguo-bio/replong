@@ -19,9 +19,11 @@ If the canu and faidx path is added to the Path variable, the -u and -a option c
 
 The minimum read length and mininum overlap length to calculate in RepLong can be set by parameters -r and -o. The default is 1000bp and 500bp.
 
-The max thread number and max memory usage can be set by parameter -h and -e. For example -h 20 -e 5 means 20 threads and 5G memory usage.
+The max thread number and max memory usage can be set by parameter -h and -e. For example -h 20 -e 5 means 20 threads and 5G memory usage. The default use all the resources available.
+
+If use long read correction step, it can be set by -c true. The default is false.
 ## Run:
-	./replong.sh -f <long reads fasta> -s <an estimate of the whole genome size> -t <place of temporary files>  [-u <canu path>] [-a <faidx path>] [-j <java path>] [-r minimum read length] [-o minimum overlap length]
+	./replong.sh -f <long reads fasta> -s <an estimate of the whole genome size> -t <place of temporary files>  [-u <canu path>] [-a <faidx path>] [-j <java path>] [-r minimum read length] [-o minimum overlap length] [-h maximum thread] [-e maximum memory] [-c true]
 
 For example:
 	./replong.sh -f dmel.polished.fa -s 165M  -t ~/temp -u ~/software/canu-1.4/Linux-amd64/bin -a /usr/local/bin

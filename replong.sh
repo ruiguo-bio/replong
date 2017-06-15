@@ -156,7 +156,6 @@ fi
 if [ -z $faidxPath ]
 then
 	faidxPath=$(command -v faidx)	
-	faidxPath=${faidxPath%faidx}
 fi
 
 printf "canu path is %s\n" $canuPath
