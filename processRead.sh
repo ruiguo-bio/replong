@@ -23,9 +23,9 @@ do
 #	rm $i
 
 	printf "make edge file\n"
-	awk ' {id1=$1;id2=$2;strand1=0;if($8-$7<0) {strand2=1;id2replen=$7-$8;}else {strand2=0;id2replen=$8-$7};id1replen=$6-$5; repdiff=id1replen>id2replen?id1replen-id2replen:id2replen-id1replen;if(id1replen>100 && id2replen>100 && repdiff < 600) {print id1"_"strand1"_" int($5/250)*250,id2"_"strand2"_" int($7/250)*250,int((id1replen+id2replen)/2)}}' ${line}.ovl > ${line}.edge
+	awk -v from="$fromlen" -v dif="$lendiff" ' {id1=$1;id2=$2;strand1=0;if($8-$7<0) {strand2=1;id2replen=$7-$8;id2from=$8} else {strand2=0;id2replen=$8-$7;id2from=$7};id1replen=$6-$5; if(id1replen>id2replen) {repdiff=id1replen-id2replen} else {id2replen-id1replen}; if(id1replen>from && id2replen>from &&repdiff<dif) {print id1"_"strand1"_" int($5/from)*from,id2"_"strand2"_" int(id2from/from)*from,int((id1replen+id2replen)/2)}}' ${line}.ovl > ${line}.edge
 	printf "make bed file\n"
-	awk  '{if($8-$7<0) {id2replen=$7-$8;} else id2replen=$8-$7; id1replen=$6-$5; repdiff=id1replen>id2replen?id1replen-id2replen:id2replen-id1replen;if(id1replen>100 && id2replen>100 && repdiff < 600) {print $1,$5,$6}}' ${line}.ovl > ${line}.bed
+	awk  -v from="$fromlen" -v dif="$lendiff" '{if($8-$7<0) {id2replen=$7-$8;} else id2replen=$8-$7; id1replen=$6-$5; if(id1replen>id2replen) {repdiff=id1replen-id2replen} else {id2replen-id1replen}; if(id1replen>from && id2replen>from && repdiff < dif) {print $1,$5,$6}}' ${line}.ovl > ${line}.bed
 #
 	rm ${line}.ovl
 	lines=$(wc -l ${line}.bed | cut -d " " -f1)
@@ -332,7 +332,7 @@ then
 else
 	newSize=1M
 fi
-$canuPath/canu -correct -p "step2" -d "temp" genomeSize=$newSize coroutcoverage=400 cormincoverage=0 overlapper=ovl gnuplottested=true minreadlength=100 minoverlaplength=20 stopafter=overlap -pacbio-corrected new.fa
+$canuPath/canu -correct -p "step2" -d "temp" genomeSize=$newSize coroutcoverage=400 cormincoverage=0 maxThreads=$maxThreads maxMemory=$maxMemory overlapper=ovl gnuplottested=true minreadlength=100 minoverlaplength=20 stopafter=overlap -pacbio-corrected new.fa
 if [ -e all.out ]
 then
 	rm all.out
