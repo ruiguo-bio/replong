@@ -23,9 +23,9 @@ do
 #	rm $i
 
 	printf "make edge file\n"
-	awk -v from="$fromlen" -v dif="$lendiff" ' {id1=$1;id2=$2;strand1=0;if($8-$7<0) {strand2=1;id2replen=$7-$8;id2from=$8} else {strand2=0;id2replen=$8-$7;id2from=$7};id1replen=$6-$5; if(id1replen>id2replen) {repdiff=id1replen-id2replen} else {id2replen-id1replen}; if(id1replen>from && id2replen>from &&repdiff<dif) {print id1"_"strand1"_" int($5/from)*from,id2"_"strand2"_" int(id2from/from)*from,int((id1replen+id2replen)/2)}}' ${line}.ovl > ${line}.edge
+	awk -v from="$netMinOverlap"  ' {id1=$1;id2=$2;strand1=0;if($8-$7<0) {strand2=1;id2replen=$7-$8;id2from=$7} else {strand2=0;id2replen=$8-$7;id2from=$7};id1replen=$6-$5; if(id1replen>id2replen) {repdiff=id1replen-id2replen} else {id2replen-id1replen}; if(id1replen>from && id2replen>100 && repdiff< 600) {print id1"_"strand1"_" int($5/from)*from,id2"_"strand2"_" int(id2from/from)*from,int((id1replen+id2replen)/2)}}' ${line}.ovl > ${line}.edge
 	printf "make bed file\n"
-	awk  -v from="$fromlen" -v dif="$lendiff" '{if($8-$7<0) {id2replen=$7-$8;} else id2replen=$8-$7; id1replen=$6-$5; if(id1replen>id2replen) {repdiff=id1replen-id2replen} else {id2replen-id1replen}; if(id1replen>from && id2replen>from && repdiff < dif) {print $1,$5,$6}}' ${line}.ovl > ${line}.bed
+	awk  -v from="$netMinOverlap" '{if($8-$7<0) {id2replen=$7-$8;} else id2replen=$8-$7; id1replen=$6-$5; if(id1replen>id2replen) {repdiff=id1replen-id2replen} else {id2replen-id1replen}; if(id1replen>from && id2replen>from && repdiff < 600) {print $1,$5,$6}}' ${line}.ovl > ${line}.bed
 #
 	rm ${line}.ovl
 	lines=$(wc -l ${line}.bed | cut -d " " -f1)
@@ -59,7 +59,7 @@ do
 		done
 		printf "find community in the graph\n"
 		printf "line=%s\n" $line
-		Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops
+		Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
 		printf "extract result fasta file\n"
 		printf "the extract fasta folder name is %s\n" $(pwd)
 		if [ -e ${line}_00.line ]
@@ -111,7 +111,7 @@ do
 					printf "find community in the graph\n"
 #					line=9
 					printf "line=%s\n" $line
-					Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops
+					Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
 					printf "extract result fasta file\n"
 					printf "the extract fasta folder name is %s\n" $(pwd)
 					if [ -e ${line}_00.line ]
@@ -136,7 +136,7 @@ do
 					mv ${line}.bed ${line}_00.bed
 					printf "find community in the graph\n"
 					printf "line=%s\n" $line
-					Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops
+					Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
 					printf "extract result fasta file\n"
 					printf "the extract fasta folder name is %s\n" $(pwd)
 					if [ -e ${line}_00.line ]
@@ -162,7 +162,7 @@ do
 				mv ${line}.bed ${line}_00.bed
 				printf "find community in the graph\n"
 				printf "line=%s\n" $line
-				Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops
+				Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
 				printf "extract result fasta file\n"
 				printf "the extract fasta folder name is %s\n" $(pwd)
 				if [ -e ${line}_00.line ]
@@ -210,7 +210,7 @@ do
 					done
 					printf "find community in the graph\n"
 					printf "line=%s\n" $line
-					Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops
+					Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
 					printf "extract result fasta file\n"
 					printf "the extract fasta folder name is %s\n" $(pwd)
 					if [ -e ${line}_00.line ]
@@ -239,7 +239,7 @@ do
 					mv ${line}.bed ${line}_00.bed
 					printf "find community in the graph\n"
 					printf "line=%s\n" $line
-					Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops
+					Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
 					printf "extract result fasta file\n"
 					printf "the extract fasta folder name is %s\n" $(pwd)
 					if [ -e ${line}_00.line ]
@@ -270,7 +270,7 @@ do
 		mv ${line}.bed ${line}_00.bed
 		printf "find community in the graph\n"
 		printf "line=%s\n" $line
-		Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops
+		Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
 		printf "extract result fasta file\n"
 		printf "the extract fasta folder name is %s\n" $(pwd)
 		if [ -e ${line}_00.line ]
@@ -300,7 +300,7 @@ cat  correction/2-correction/correction_outputs/*.fasta > all.fa
 rm -rf correction/2-correction/correction_outputs
 rm -rf correction/1-overlapper/queries
 awk '{id="read"$1"_0";print id,$2,$3}' merged.bed > merged.new.bed
-$faidxPath -b merged.new.bed -l all.fa > new.fa
+$faidxPath/faidx -b merged.new.bed -l all.fa > new.fa
 else
 rm -rf correction/1-overlapper/blocks
 rm -rf correction/1-overlapper/queries
@@ -321,7 +321,7 @@ awk '{if($3 > $2) print $0}' merged.name.bed > merged.name.bed1
 mv merged.name.bed1 merged.name.bed
 printf "extract repeat sequences\n"
 printf "orifile=%s\n" $home/$orifile
-$faidxPath -b merged.name.bed -l $home/$orifile > new.fa
+$faidxPath/faidx -b merged.name.bed -l $home/$orifile > new.fa
 fi
 newSize=$(du new.fa | cut -f1)
 printf "%s\n" $newSize
@@ -386,7 +386,7 @@ cat  new_*_sorted.bed > new_sorted.bed
 
 paste <(cut -f2 new_sorted.name) <(cut -d " " -f2-3 new_sorted.bed) > new.name.bed
 printf "extract repeat sequences\n"
-$faidxPath -b new.name.bed new.fa > result.fa
+$faidxPath/faidx -b new.name.bed new.fa > result.fa
 awk '/^>/{print ">" ++i; next}{print}' < result.fa > rename.fa
 rm result.fa
 mv rename.fa result.fa

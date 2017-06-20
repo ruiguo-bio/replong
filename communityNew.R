@@ -7,6 +7,7 @@ first=as.integer(args[4])
 second=as.integer(args[5])
 breaks=as.integer(args[6])
 drops=as.integer(args[7])
+weight=as.character(args[8])
 #folder='~/project/dro_temp/n200l15000000b50n11n21deg30c30o1div0/'
 # deg_fil=50
 # commu_size_fil=20
@@ -26,9 +27,10 @@ print(deg_fil)
 print(commu_size_fil)
 print(breaks)
 print(drops)
+print(weight)
 library(igraph)
 #lines=vector(mode='integer')
-pipelines = function(file,deg_fil,commu_size_fil,first,second,breaks,drops){
+pipelines = function(file,deg_fil,commu_size_fil,first,second,breaks,drops,weight){
   print(file)
   #name_from = regexpr("part",file)
   name_to = regexpr(".edge",file)
@@ -60,7 +62,13 @@ pipelines = function(file,deg_fil,commu_size_fil,first,second,breaks,drops){
   deg_filtered_names = names(deg)[deg>=deg_fil]
   net_filtered <- induced_subgraph(net,deg_filtered_names,impl="create_from_scratch")
   print("calculate community")
-  commu = cluster_louvain(net_filtered)
+  if(weight=="true"){
+    print("use weight")
+    commu = cluster_louvain(net_filtered,weights = E(net_filtered)$rlen)}
+  else{
+    print("do not use weight")
+    commu = cluster_louvain(net_filtered)
+  }
   
   commu_size <- as.integer(sizes(commu))
   #print(commu_size)
@@ -232,4 +240,5 @@ mclapply(files,pipelines,deg_fil=deg_fil,
          second=second,
          breaks=breaks,
          drops=drops,
-	     mc.cores=4)		
+         weight=weight,
+         mc.cores=4)		

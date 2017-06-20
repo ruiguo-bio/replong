@@ -5,8 +5,8 @@ printf "script path = %s\n" $DIR
 #source ${DIR}/generateFasta.sh
 source ${DIR}/processRead.sh 
 # set flog vars to empty
-lines=65000000 genomeSize= file= temp= lendiff=200 fromlen=250 ratio=0.96 drops=3 n1=3 n2=8 degree=10 commu_size=10 window=100 cor=false breaks=200 outputfile="replong.log" canuPath="" faidxPath="" javaPath="" minOverlapLength=500 minReadLength=1000
-while getopts f:o:r:s:e:h:n:l:t:j:b:q:w:d:x:c:g:a:m:z:u: opt
+lines=65000000 genomeSize= file= temp= lendiff=200 fromlen=250 ratio=0.96 drops=3 n1=3 n2=8 degree=10 commu_size=10 window=100 cor=false breaks=200 outputfile="replong.log" canuPath="" faidxPath="" javaPath="" minOverlapLength=500 minReadLength=1000 netMinOverlap=100 weight=false
+while getopts f:o:r:s:e:h:n:l:t:p:j:b:q:w:d:x:c:g:a:m:z:u: opt
 do
 	case $opt in
 		f)	file=$OPTARG
@@ -77,6 +77,18 @@ do
 			((OPTIND--))  
 			continue
 			fi
+			weight=$OPTARG
+			;;
+		p)	if [[ $OPTARG = -* ]]; then
+			((OPTIND--))  
+			continue
+			fi
+			netMinOverlap=$OPTARG
+			;;
+		y)	if [[ $OPTARG = -* ]]; then
+			((OPTIND--))  
+			continue
+			fi
 			n2=$OPTARG
 			;;
 		d)	if [[ $OPTARG = -* ]]; then
@@ -140,6 +152,7 @@ printf "lendiff=%d\n" $lendiff
 #printf "window=%d\n" $window
 printf "fromlen=%d\n" $fromlen
 #printf "outputfile=%s\n" $outputfile
+printf "network minimum overlap length=%s\n" $netMinOverlap
 home=$(pwd)
 orifile=$file 
 printf "original place=%s\n" $home
@@ -147,6 +160,7 @@ mkdir $temp
 if [ -z $javaPath ]
 then
 	javaPath=$(command -v java)	
+	javaPath=${javaPath%java}
 fi
 if [ -z $canuPath ]
 then
@@ -156,6 +170,7 @@ fi
 if [ -z $faidxPath ]
 then
 	faidxPath=$(command -v faidx)	
+	faidxPath=${faidxPath%faidx}
 fi
 
 printf "canu path is %s\n" $canuPath
@@ -167,18 +182,18 @@ if [ $cor = true ]
 then
 	
 	printf "Use raw reads\n"
-	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize"  saveReadCorrections=T maxThreads=$maxThreads maxMemory=$maxMemory java=$javaPath corOutCoverage=400 gnuplotTested=true minReadLength=$minReadLength minOverlapLength=$minOverlapLength corMinCoverage=0 -pacbio-raw "$file"
+#	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize"  saveReadCorrections=T maxThreads=$maxThreads maxMemory=$maxMemory java=$javaPath/java corOutCoverage=400 gnuplotTested=true minReadLength=$minReadLength minOverlapLength=$minOverlapLength corMinCoverage=0 -pacbio-raw "$file"
 	printf "the folder is %s\n" $temp
 	cd $temp
 	printf "process reads\n"
-	processRead
+#	processRead
 else
 	printf "Use corrected reads\n"
-	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize" corOutCoverage=400 java=$javaPath gnuplotTested=true maxThreads=$maxThreads maxMemory=$maxMemory corMinCoverage=0 minReadLength=$minReadLength minOverlapLength=$minOverlapLength  stopAfter=overlap -pacbio-corrected "$file"
+#	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize" corOutCoverage=400 java=$javaPath/java gnuplotTested=true maxThreads=$maxThreads maxMemory=$maxMemory corMinCoverage=0 minReadLength=$minReadLength minOverlapLength=$minOverlapLength  stopAfter=overlap -pacbio-corrected "$file"
 	printf "the folder is %s\n" $temp
 	cd $temp
 	printf "process reads\n"
-	processRead
+#	processRead
 fi	
 echo $parameters >> ${home}/${outputfile}
 duration=$SECONDS
