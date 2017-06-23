@@ -161,16 +161,35 @@ if [ -z $javaPath ]
 then
 	javaPath=$(command -v java)	
 	javaPath=${javaPath%java}
+else
+	ORGPATH=`pwd`
+	RELPATH=$javaPath
+	cd $RELPATH
+	javaPath=`pwd`
+	cd $ORGPATH
 fi
 if [ -z $canuPath ]
 then
 	canuPath=$(command -v canu)	
 	canuPath=${canuPath%canu}
+else
+	ORGPATH=`pwd`
+	RELPATH=$canuPath
+	cd $RELPATH
+	canuPath=`pwd`
+	cd $ORGPATH
 fi
+
 if [ -z $faidxPath ]
 then
 	faidxPath=$(command -v faidx)	
 	faidxPath=${faidxPath%faidx}
+else
+	ORGPATH=`pwd`
+	RELPATH=$faidxPath
+	cd $RELPATH
+	faidxPath=`pwd`
+	cd $ORGPATH
 fi
 
 printf "canu path is %s\n" $canuPath
