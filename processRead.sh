@@ -345,7 +345,7 @@ do
 	$canuPath/overlapConvert -G temp/correction/step2.gkpStore -coords ${i}  >> all.ovl ;
 done
 
-rintf "filter overlap file to merge repeat\n"
+printf "filter overlap file to merge repeat\n"
 python ${DIR}/edge_1.py all.ovl temp/correction/step2.gkpStore/reads.txt $fromlen $lendiff $ratio new.edge
 printf "use community detection to merge repeat\n"
 Rscript --vanilla  ${DIR}/merge.R
