@@ -11,23 +11,29 @@ To install canu, follow the instruction below:
 
 Canu depends on Java 8, please add Java path into Path variable or set in the RepLong parameter -j.
 
-Please install R and R library "igraph", python, and faidx to run RepLong.
+After compiling, canu and faidx path should be add to the Path variable or set in the replong parameters -u and -a. If the canu and faidx path is added to the Path variable, the -u and -a option can be skipped.
 
-After compiling, canu and faidx path should be add to the Path variable or set in the replong parameters -u and -a.
-
-If the canu and faidx path is added to the Path variable, the -u and -a option can be skipped.
+Please install R and R library "igraph", python(2.7 or 3.4 above), and faidx to run RepLong.
 
 The minimum read length and mininum overlap length to calculate in RepLong can be set by parameters -r and -o. The default is 1000bp and 500bp.
 
-The max thread number and max memory usage can be set by parameter -h and -e. For example -h 20 -e 5 means 20 threads and 5G memory usage. The default use all the resources available.
+The max thread number and max memory usage can be set by parameter -h and -e. For example -h 20 -e 5 means 20 threads and 5G memory usage. The default use all the resources available. Those parameters are connected with the -s parameter, so if there are messages like the resources are not enough to run canu, please set a smaller -s parameter, or do not set -h and -e parameters.
 
-If use long read correction step, it can be set by -c true. The default is false.
+If use long read correction step, it can be set by -c true. The default is false. If the input is Pacbio raw reads, it is recommended to set -c to true.
+
+
 ## Run:
 	./replong.sh -f <long reads fasta> -s <an estimate of the whole genome size> -t <place of temporary files>  [-u <canu path>] [-a <faidx path>] [-j <java path>] [-r minimum read length] [-o minimum overlap length] [-h maximum thread] [-e maximum memory] [-c true]
 
 For example:
 	./replong.sh -f dmel.polished.fa -s 165M  -t ~/temp -u ~/software/canu-1.4/Linux-amd64/bin -a /usr/local/bin
 
+The input file should be a fasta file, and for each sequence the sequence name should not contain white space. For example, it should be like:
+
+>homoNewSens_16752710
+AGGTATCCTGCCGTGGGGTGAACCCTGCATAGAGATGGAGGCAGGGTCCGTAAAGGGCTGGGTGCAGGCATAAATCCCTTCTTCCCTGAACATCAGGCGGGAGTCTGGGCTGTGATACCTTGACACACCTGTGGCCCTAAACTTTCCCCATTTATTTATTTGGCTGTAATTAAATCCTGTTTCTTCCAGATGCTGGAGGTACCAGCCTAGCCCTAAAGAGACCAGGGAAGTGGGCTGGAAAGAAACAAAGGCAGGCTTGGAGGATTAATCTGTGATACCTTTATAGAAACTGTGAAAGGAAGGAAAGCCTGACTTGCTACAGCACAGAGGAGCCCGGAGGACATTATGCTCGATTAAATAAGCCCGTCCCCAAACGACAGGTATTATATGATTTTACAAATATAAAATGTATGGTCCCTAGAGGGGCCAGAGTCACAGAGATGGAAAGTGGAATGGCGGGTGCCGGGGCTGGGGAGCTACTGTGCAGGGGACAGAGCTTTAGTTCTGCAAGATGAAACAGTTCTGGAGATGGACGGTGGGGATGGGGGCCCAGCAATGGGAACGTGCTTAATGCCACTGAACTGGGCACTTAAACGTGGTGAAAACTGTAAAAGTCATGTGTATTTTTCTACAATTAAAAA
+
+The folder to temp file should have enough space(typical 100G above for drosophila long read of 3G), and more for bigger input.
 
 Please replace the "./replong.sh" with the actual path of replong to run it and specify an empty folder for the temp file.
 
