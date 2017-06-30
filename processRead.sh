@@ -262,29 +262,102 @@ do
 			fi
 		fi
 	else
-		printf "file size is ok,just process\n"
-		file=${line}.edge
-		awk '{print $0,NR}' $file > ${file}_new
-		rm $file
-		mv ${file}_new ${line}_00.edge
-		mv ${line}.bed ${line}_00.bed
-		printf "find community in the graph\n"
-		printf "line=%s\n" $line
-		Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
-		printf "extract result fasta file\n"
-		printf "the extract fasta folder name is %s\n" $(pwd)
-		if [ -e ${line}_00.line ]
+		if [ $fcombine = true ]
 		then
-		linefiles=$(ls ${line}*.line)
-		for file in $linefiles
-		do
-			name=${file%.line}
-			printf "name=%s\n" $name
-			sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
-		done
-		wait
-		rm ${line}*.edge
-		find . -name ${line}_[0-9][0-9].bed -delete
+			printf "combine with previous files\n"
+			totallines=$(($(wc -l $((line-1)).bed | cut -d " " -f1) + $(wc -l ${line}.bed | cut -d " " -f1)))
+			cat $((line-1)).edge ${line}.edge > ${line}_new.edge
+			mv ${line}_new.edge ${line}.edge
+			cat $((line-1)).bed ${line}.bed > ${line}_new.bed
+			mv ${line}_new.bed ${line}.bed
+			rm $((line-1)).edge
+			rm $((line-1)).bed
+			fcombine=false
+
+			printf "totallines=%d\n" $totallines
+			if [ $totallines -gt 85000000 ]
+			then
+				printf "the combined file need split\n"
+				fn=$((${totallines}/65000000 + 1))
+				eachline=$((${totallines}/$fn+1))
+				split ${line}.edge -l $eachline -d ${line}_ --additional-suffix=.edge
+				split ${line}.bed -l $eachline -d ${line}_ --additional-suffix=.bed
+				edgefiles=$(ls ${line}_[0-9]*edge)
+				for file in $edgefiles
+				do
+					awk '{print $0,NR}' $file > ${file}_new
+					rm $file
+					mv ${file}_new $file
+				done
+				printf "find community in the graph\n"
+				printf "line=%s\n" $line
+				Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
+				printf "extract result fasta file\n"
+				printf "the extract fasta folder name is %s\n" $(pwd)
+				if [ -e ${line}_00.line ]
+				then
+					linefiles=$(ls ${line}*.line)
+					for file in $linefiles
+					do
+						name=${file%.line}
+						printf "name=%s\n" $name
+						sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
+					done
+					wait
+					rm ${line}*.edge
+					rm ${line}.bed
+					find . -name "${line}_[0-9][0-9].bed" -delete
+				fi
+			else
+				file=${line}.edge
+				awk '{print $0,NR}' $file > ${file}_new
+				rm $file
+				mv ${file}_new ${line}_00.edge
+				mv ${line}.bed ${line}_00.bed
+				printf "find community in the graph\n"
+				printf "line=%s\n" $line
+				Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
+				printf "extract result fasta file\n"
+				printf "the extract fasta folder name is %s\n" $(pwd)
+				if [ -e ${line}_00.line ]
+				then
+					linefiles=$(ls ${line}*.line)
+					for file in $linefiles
+					do
+						name=${file%.line}
+						printf "name=%s\n" $name
+						sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
+					done
+					wait
+					rm ${line}*.edge
+					find . -name "${line}_[0-9][0-9].bed" -delete
+				fi
+			fi
+		else
+			printf "file size is ok,just process\n"
+			file=${line}.edge
+			awk '{print $0,NR}' $file > ${file}_new
+			rm $file
+			mv ${file}_new ${line}_00.edge
+			mv ${line}.bed ${line}_00.bed
+			printf "find community in the graph\n"
+			printf "line=%s\n" $line
+			Rscript --vanilla  ${DIR}/communityNew.R $line $degree $commu_size $n1 $n2 $breaks $drops $weight
+			printf "extract result fasta file\n"
+			printf "the extract fasta folder name is %s\n" $(pwd)
+			if [ -e ${line}_00.line ]
+			then
+			linefiles=$(ls ${line}*.line)
+			for file in $linefiles
+			do
+				name=${file%.line}
+				printf "name=%s\n" $name
+				sed -n $(cat ${name}.line) ${name}.bed > ${name}_new.bed &
+			done
+			wait
+			rm ${line}*.edge
+			find . -name ${line}_[0-9][0-9].bed -delete
+			fi
 		fi
 	fi
 #fi
@@ -326,7 +399,7 @@ fi
 newSize=$(du new.fa | cut -f1)
 printf "%s\n" $newSize
 printf "use ovl to find overlap\n"
-if ((newSize/10))>100
+if [ $((newSize/10)) -gt 100 ]
 then 
 	newSize=$((newSize*100)) 
 else
