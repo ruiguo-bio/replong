@@ -48,6 +48,10 @@ The human test file of 100k reads can be downloaded from https://drive.google.co
 
 The drosophila test file of 100k reads can be downloaded from https://drive.google.com/open?id=0B90UmIY8m2PYcTl6WVpyQmdfM3c
 
+The drosophila repeat result using raw sequences, 800k reads sampled from http://gembox.cbcb.umd.edu/mhap/raw/dmel_filtered.fastq.gz can be found on https://drive.google.com/open?id=0B90UmIY8m2PYWWdhVjFpLXU3cFU
+
+The human repeat result using polished sequences, 900k reads sampled from http://gembox.cbcb.umd.edu/mhap/data/human.polished.fastq.bz2 can ben found on https://drive.google.com/open?id=0B90UmIY8m2PYVlRxME5FV0loelE
+
 Please replace the "./replong.sh" with the actual path of replong to run it and specify an empty folder for the temp file.
 
 ## Result:
