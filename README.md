@@ -20,9 +20,9 @@ After compiling, canu and faidx path should be add to the Path variable or set i
 ## Run:
 	./replong.sh -f <long reads fasta> -s <an estimate of the whole genome size> -t <place of temporary files>  [-u <canu path>] [-a <faidx path>] [-j <java path>] [-r minimum read length] [-o minimum overlap length] [-h maximum thread] [-e maximum memory] [-c true]
 
-The madatory parameters are -f , -s and -t. The input file should be a fasta file, and for each sequence the sequence name should not contain white space. For example, it should be like:
+The mandatory parameters are -f , -s and -t. The input file should be a fasta file, and for each sequence the sequence name should not contain white space. For example, it should be like:
 
->homoNewSens_16752710
+\>homoNewSens_16752710
 AGGTATCCTGCCGTGGGGTGAACCCTGCATAGAGATGGAGGCAGGGTCCGTAAAGGGCTGGGTGCAGGCATAAATCCCTTCTTCCCTGAACATCAGGCGGGAGTCTGGGCTGTGATACCTTGACACACCTGTGGCCCTAAACTTTCCCCATTTATTTATTTGGCTGTAATTAAATCCTGTTTCTTCCAGATGCTGGAGGTACCAGCCTAGCCCTAAAGAGACCAGGGAAGTGGGCTGGAAAGAAACAAAGGCAGGCTTGGAGGATTAATCTGTGATACCTTTATAGAAACTGTGAAAGGAAGGAAAGCCTGACTTGCTACAGCACAGAGGAGCCCGGAGGACATTATGCTCGATTAAATAAGCCCGTCCCCAAACGACAGGTATTATATGATTTTACAAATATAAAATGTATGGTCCCTAGAGGGGCCAGAGTCACAGAGATGGAAAGTGGAATGGCGGGTGCCGGGGCTGGGGAGCTACTGTGCAGGGGACAGAGCTTTAGTTCTGCAAGATGAAACAGTTCTGGAGATGGACGGTGGGGATGGGGGCCCAGCAATGGGAACGTGCTTAATGCCACTGAACTGGGCACTTAAACGTGGTGAAAACTGTAAAAGTCATGTGTATTTTTCTACAATTAAAAA
 
 The -s parameter is an estimate of the whole genome size. For drosophila input, it may be set to 165M, and for human input, it may be set to 3G. Actually that parameter is not quite relevant in RepLong, and it is used in Canu for the assembly step. So it is feasible to set that parameter to a small number, like 50M for drosophila and 500M for human, and that can repress the error if Canu says the resource is not enough.
