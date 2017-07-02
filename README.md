@@ -40,6 +40,7 @@ For example, to use corrected long reads:
 	./replong.sh -f human_100k.fa -s 500M -t /2T/hum_100k
 
 To use raw long reads:
+
 	./replong.sh -f dro_100k.fa -s 100M -t /2T/dro_100k -c true
 
 
