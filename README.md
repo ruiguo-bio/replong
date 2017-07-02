@@ -35,8 +35,17 @@ The minimum read length and mininum overlap length to calculate in RepLong can b
 
 The max thread number and max memory usage can be set by parameter -h and -e. For example -h 20 -e 5 means 20 threads and 5G memory usage. The default use all the resources available. Those parameters are connected with the -s parameter, soif there are messages like the resources are not enough to run canu, please set a smaller -s parameter, or do not set -h and -e parameters.
 
-For example:
-	./replong.sh -f dmel.polished.fa -s 165M  -t ~/temp -u ~/software/canu-1.4/Linux-amd64/bin -a /usr/local/bin
+For example, to use corrected long reads:
+
+	./replong.sh -f human_100k.fa -s 500M -t /2T/hum_100k
+
+To use raw long reads:
+	./replong.sh -f dro_100k.fa -s 100M -t /2T/dro_100k -c true
+
+
+The human test file of 100k reads can be downloaded from https://drive.google.com/open?id=0B90UmIY8m2PYblAyQ0tnQ0E3MDA
+
+The drosophila test file of 100k reads can be downloaded from https://drive.google.com/open?id=0B90UmIY8m2PYcTl6WVpyQmdfM3c
 
 Please replace the "./replong.sh" with the actual path of replong to run it and specify an empty folder for the temp file.
 
