@@ -154,7 +154,7 @@ printf "fromlen=%d\n" $fromlen
 #printf "outputfile=%s\n" $outputfile
 printf "network minimum overlap length=%s\n" $netMinOverlap
 home=$(pwd)
-orifile=$file 
+orifile="$(cd "$(dirname "$file")" && pwd)/$(basename "$file")"
 printf "original place=%s\n" $home
 mkdir $temp
 if [ -z $javaPath ]
