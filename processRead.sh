@@ -399,8 +399,8 @@ paste <(cut -f2 merged.name) <(cut -d " " -f2-3 merged.bed) > merged.name.bed
 awk '{if($3 > $2) print $0}' merged.name.bed > merged.name.bed1
 mv merged.name.bed1 merged.name.bed
 printf "extract repeat sequences\n"
-printf "orifile=%s\n" $home/$orifile
-$faidxPath/faidx -b merged.name.bed -l $home/$orifile > new.fa
+printf "orifile=%s\n" $orifile
+$faidxPath/faidx -b merged.name.bed -l $orifile > new.fa
 cat new.fa | awk '{if (index($0,">")==1) print $0; else { if (length($0)==0){printf("\n");} else { split($0, s, ""); notN = 0; for (i=1; i <= length(s); i++) { if ((s[i]=="N")||(s[i]=="n")) {continue;} notN = 1; printf("%s", s[i]) } if (notN==1) { printf("\n");} } } }' > noN.fa
 mv noN.fa new.fa
 awk 'BEGIN {RS = ">" ; FS = "\n" ; ORS = ""} $2 {print ">"$0}' new.fa > new1.fa
