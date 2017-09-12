@@ -1,4 +1,4 @@
-!# /bin/bash
+#! /bin/bash
 
 git clone https://github.com/ruiguo-bio/canu
 cd canu/src
