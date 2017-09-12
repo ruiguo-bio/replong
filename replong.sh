@@ -150,6 +150,25 @@ printf "network minimum overlap length=%s\n" $netMinOverlap
 home=$(pwd)
 orifile="$(cd "$(dirname "$file")" && pwd)/$(basename "$file")"
 printf "original place=%s\n" $home
+
+if [ -z $file ]
+then
+printf "no input file!\n"
+exit 1
+fi
+
+if [ -z $temp ]
+then
+printf "no temp folder!\n"
+exit 1
+fi
+
+if [ -z $genomeSize ]
+then
+printf "no genome size!\n"
+exit 1
+fi
+
 mkdir $temp
 if [ -z $javaPath ]
 then
