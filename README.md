@@ -3,22 +3,23 @@
 RepLong is used to find repetitive elements in the genome using long reads. It uses a fork of canu(https://github.com/marbl/canu/) and depends on R with library "igraph", python and faidx(https://pypi.python.org/pypi/pyfaidx).
 
 ## Install:
-To install canu, follow the instruction below:
+To install RepLong, follow the instruction below:
 
-	git clone https://github.com/ruiguo-bio/canu
-	cd canu/src
-	make -j <number of threads>
+	git clone https://github.com/ruiguo-bio/replong
+	./install.sh
+
+This operation will clone the RepLong and Canu software which is used by RepLong.
 
 Please install R and R library "igraph", python(2.7 or 3.4 above), and faidx to run RepLong.
 
 Canu depends on Java 8, please add Java path into Path variable or set in the RepLong parameter -j.
 
-After compiling, canu and faidx path should be add to the Path variable or set in the replong parameters -u and -a. If the canu and faidx path is added to the Path variable, the -u and -a option can be skipped.
+The faidx path should be add to the Path variable or set in the RepLong parameters -a. If the faidx path is added to the Path variable, the -a option can be skipped.
 
 
 
 ## Run:
-	./replong.sh -f <long reads fasta> -s <an estimate of the whole genome size> -t <place of temporary files>  [-u <canu path>] [-a <faidx path>] [-j <java path>] [-r minimum read length] [-o minimum overlap length] [-h maximum thread] [-e maximum memory] [-c true]
+	./replong.sh -f <long reads fasta> -s <an estimate of the whole genome size> -t <place of temporary files> [-a <faidx path>] [-j <java path>] [-r minimum read length] [-o minimum overlap length] [-h maximum thread] [-e maximum memory] [-c true]
 
 The mandatory parameters are -f , -s and -t. The input file should be a fasta file, and for each sequence the sequence name should not contain white space. For example, it should be like:
 

@@ -6,7 +6,7 @@ printf "script path = %s\n" $DIR
 source ${DIR}/processRead.sh 
 # set flog vars to empty
 lines=65000000 genomeSize= file= temp= lendiff=200 fromlen=250 ratio=0.96 drops=3 n1=3 n2=8 degree=10 commu_size=10 window=100 cor=false breaks=200 outputfile="replong.log" canuPath="" faidxPath="" javaPath="" minOverlapLength=500 minReadLength=1000 netMinOverlap=100 weight=false
-while getopts f:o:r:s:e:h:n:l:t:p:j:b:q:w:d:x:c:g:a:m:z:u: opt
+while getopts f:o:r:s:e:h:n:l:t:p:j:b:q:w:d:x:c:g:a:m:z: opt
 do
 	case $opt in
 		f)	file=$OPTARG
@@ -97,12 +97,6 @@ do
 			fi
 			degree=$OPTARG
 			;;
-		u)	if [[ $OPTARG = -* ]]; then
-			((OPTIND--))  
-			continue
-			fi
-			canuPath=$OPTARG
-			;;
 		a)	if [[ $OPTARG = -* ]]; then
 			((OPTIND--))  
 			continue
@@ -168,17 +162,9 @@ else
 	javaPath=`pwd`
 	cd $ORGPATH
 fi
-if [ -z $canuPath ]
-then
-	canuPath=$(command -v canu)	
-	canuPath=${canuPath%canu}
-else
-	ORGPATH=`pwd`
-	RELPATH=$canuPath
-	cd $RELPATH
-	canuPath=`pwd`
-	cd $ORGPATH
-fi
+
+canuPath="canu-1.4/Linux-amd64/bin"
+canuPath="$DIR/$canuPath"
 
 if [ -z $faidxPath ]
 then
