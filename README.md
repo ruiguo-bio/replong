@@ -57,3 +57,5 @@ Please replace the "./replong.sh" with the actual path of replong to run it and 
 
 ## Result:
 The result fasta file will be place in the current folder, and the temporary files will be deleted. 
+
+If the repeat number of each repeat is needed, please blast the repeat read to the input long read. The number of blast matches for each read is the coverage of that read. That coverage divides the average coverage of long read input can give the copy number of each repeat read.
