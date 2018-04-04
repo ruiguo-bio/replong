@@ -474,6 +474,9 @@ $faidxPath/faidx -b new.name.bed new.fa > result.fa
 awk '/^>/{print ">" ++i; next}{print}' < result.fa > rename.fa
 rm result.fa
 mv rename.fa result.fa
+echo "the file before merging is new.fa"
+cp new.fa ${home}/
+echo "the result file name is result.fa"
 cp result.fa ${home}/
 echo $temp
 #rm -rf temp
