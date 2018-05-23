@@ -8,13 +8,11 @@ To install RepLong, follow the instruction below:
 	git clone https://github.com/ruiguo-bio/replong
 	./install.sh
 
-This operation will clone the RepLong and Canu software which is used by RepLong.
+This operation will clone the RepLong and Canu 1.4 which is used by RepLong. Please do not install the latest canu by yourself. install.sh will install canu 1.4 automatically.
 
 Please install R and R library "igraph", python(2.7 or 3.4 above), and faidx to run RepLong.
 
 Canu depends on Java 8, please add Java path into Path variable or set in the RepLong parameter -j.
-
-Canu path can be set by -n parameter, e.g. -n ~/software/canu-1.4/Linux-amd64/bin/canu. Please install canu 1.4. If the canu path is not set, system path will be searched to find canu.
 
 The faidx path should be add to the Path variable or set in the RepLong parameters -a. If the faidx path is added to the Path variable, the -a option can be skipped.
 

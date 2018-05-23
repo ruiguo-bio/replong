@@ -181,20 +181,20 @@ else
 	cd $ORGPATH
 fi
 
-if [ -z $canuPath ]
-then
-        canuPath=$(command -v canu)
-        canuPath=${canuPath%canu}
-else
-        ORGPATH=`pwd`
-	canuPath=${canuPath%canu}
-        RELPATH=$canuPath
-        cd $RELPATH
-        canuPath=`pwd`
-        cd $ORGPATH
-fi
-#canuPath="canu-1.4/Linux-amd64/bin"
-#canuPath="$DIR/$canuPath"
+#if [ -z $canuPath ]
+#then
+#        canuPath=$(command -v canu)
+#        canuPath=${canuPath%canu}
+#else
+#        ORGPATH=`pwd`
+#	canuPath=${canuPath%canu}
+#        RELPATH=$canuPath
+#        cd $RELPATH
+#        canuPath=`pwd`
+#        cd $ORGPATH
+#fi
+canuPath="canu-1.4/Linux-amd64/bin"
+canuPath="$DIR/$canuPath"
 
 if [ -z $faidxPath ]
 then
