@@ -14,7 +14,7 @@ Please install R and R library "igraph", python(2.7 or 3.4 above), and faidx to 
 
 Canu depends on Java 8, please add Java path into Path variable or set in the RepLong parameter -j.
 
-Canu path can be set by -n parameter, e.g. -n ~/software/canu-1.4/Linux-amd64/bin/canu.
+Canu path can be set by -n parameter, e.g. -n ~/software/canu-1.4/Linux-amd64/bin/canu. Please install canu 1.4. If the canu path is not set, system path will be searched to find canu.
 
 The faidx path should be add to the Path variable or set in the RepLong parameters -a. If the faidx path is added to the Path variable, the -a option can be skipped.
 
