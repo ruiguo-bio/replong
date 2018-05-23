@@ -187,6 +187,7 @@ then
         canuPath=${canuPath%canu}
 else
         ORGPATH=`pwd`
+	canuPath=${canuPath%canu}
         RELPATH=$canuPath
         cd $RELPATH
         canuPath=`pwd`
