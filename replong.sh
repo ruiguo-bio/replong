@@ -4,7 +4,6 @@ DIR=$( cd $(dirname $0) ; pwd -P )
 printf "script path = %s\n" $DIR
 #source ${DIR}/generateFasta.sh
 source ${DIR}/processRead.sh 
-# set flog vars to empty
 lines=65000000 genomeSize= file= temp= lendiff=200 fromlen=250 ratio=0.96 drops=3 n1=3 n2=8 degree=10 commu_size=10 window=100 cor=false breaks=200 outputfile="replong.log" canuPath="" faidxPath="" javaPath="" minOverlapLength=500 minReadLength=1000 netMinOverlap=100 weight=false
 while getopts f:o:r:s:e:h:n:l:t:p:j:b:q:w:d:x:c:g:a:m:z: opt
 do
@@ -129,13 +128,13 @@ do
 	esac
 done
 shift $((OPTIND - 1))
-printf "file=%s\n" $file
-printf "genomeSize=%s\n" $genomeSize
-#printf "range=%s\n"	$range
-printf "correction=%s\n" $cor
-#printf "lines=%s\n" $lines
+printf "file=%s\n" $file 
+printf "genomeSize=%s\n" $genomeSize 
+#printf "range=%s\n"	$range 
+printf "correction=%s\n" $cor 
+#printf "lines=%s\n" $lines 
 printf "temp folder=%s\n" ${temp}
-#printf "breaks=%d\n" ${breaks}
+#printf "breaks=%d\n" ${breaks} 
 #printf "n1=%d\n" $n1
 #printf "n2=%d\n" $n2
 #printf "degree=%d\n" $degree
@@ -145,7 +144,7 @@ printf "lendiff=%d\n" $lendiff
 #printf "ratio=%s\n" $ratio
 #printf "window=%d\n" $window
 printf "fromlen=%d\n" $fromlen
-#printf "outputfile=%s\n" $outputfile
+printf "outputfile=%s\n" $outputfile
 printf "network minimum overlap length=%s\n" $netMinOverlap
 home=$(pwd)
 orifile="$(cd "$(dirname "$file")" && pwd)/$(basename "$file")"
@@ -182,8 +181,19 @@ else
 	cd $ORGPATH
 fi
 
-canuPath="canu-1.4/Linux-amd64/bin"
-canuPath="$DIR/$canuPath"
+if [ -z $canuPath ]
+then
+        canuPath=$(command -v canu)
+        canuPath=${canuPath%canu}
+else
+        ORGPATH=`pwd`
+        RELPATH=$canuPath
+        cd $RELPATH
+        canuPath=`pwd`
+        cd $ORGPATH
+fi
+#canuPath="canu-1.4/Linux-amd64/bin"
+#canuPath="$DIR/$canuPath"
 
 if [ -z $faidxPath ]
 then
@@ -219,8 +229,8 @@ else
 	printf "process reads\n"
 	processRead
 fi	
-echo $parameters >> ${home}/${outputfile}
+#echo $parameters >> ${home}/${outputfile}
 duration=$SECONDS
 echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds elapsed." >> ${home}/${outputfile}
-rm -rf $temp
+#rm -rf $temp
 cd $home
