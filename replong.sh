@@ -193,7 +193,7 @@ fi
 #        canuPath=`pwd`
 #        cd $ORGPATH
 #fi
-canuPath="canu-1.4/Linux-amd64/bin"
+canuPath="canu/Linux-amd64/bin"
 canuPath="$DIR/$canuPath"
 
 if [ -z $faidxPath ]
