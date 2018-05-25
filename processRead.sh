@@ -417,9 +417,9 @@ else
 fi
 rm -rf temp
 $canuPath/canu -correct -p "step2" -d "temp" genomeSize=$newSize coroutcoverage=400 cormincoverage=0 maxThreads=$maxThreads maxMemory=$maxMemory overlapper=ovl gnuplottested=true minreadlength=100 minoverlaplength=20 stopafter=overlap -pacbio-corrected new.fa
-if [ -e all.out ]
+if [ -e all.ovl ]
 then
-	rm all.out
+	rm all.ovl
 fi
 for i in temp/correction/1-overlapper/001/*.ovb
 do
@@ -436,7 +436,7 @@ awk '{print $1,$5,$6}'  all.ovl > new.bed
 split new.line -l 500 -d new_ --additional-suffix=.line 
 for file in $(ls new_*.line)
 do
-	Rscript --vanilla ~/replong/linenum.R $file
+	Rscript --vanilla ${DIR}/linenum.R $file
 done
 for file in $(ls new_*.sed)
 do
