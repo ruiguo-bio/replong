@@ -216,14 +216,14 @@ printf "java path is %s\n" $javaPath
 if [ $cor = true ]
 then
 	
-	printf "Use raw reads\n"
+	printf "Use raw reads, read correction is running.\n"
 	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize"  saveReadCorrections=T maxThreads=$maxThreads maxMemory=$maxMemory java=$javaPath/java corOutCoverage=400 gnuplotTested=true minReadLength=$minReadLength minOverlapLength=$minOverlapLength corMinCoverage=0 -pacbio-raw "$file"
 	printf "the folder is %s\n" $temp
 	cd $temp
 	printf "process reads\n"
 	processRead
 else
-	printf "Use corrected reads\n"
+	printf "Use corrected reads, no need for read correction.\n"
 	$canuPath/canu -correct -p "step1" -d $temp genomeSize="$genomeSize" corOutCoverage=400 java=$javaPath/java gnuplotTested=true maxThreads=$maxThreads maxMemory=$maxMemory corMinCoverage=0 minReadLength=$minReadLength minOverlapLength=$minOverlapLength  stopAfter=overlap -pacbio-corrected "$file"
 	printf "the folder is %s\n" $temp
 	cd $temp
