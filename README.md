@@ -1,6 +1,6 @@
 # RepLong
 
-RepLong is used to find repetitive elements in the genome using long reads. It uses a fork of canu(https://github.com/marbl/canu/) and depends on R with library "igraph", python and faidx(https://pypi.python.org/pypi/pyfaidx). RepLong is tested on Linux Ubuntu 14.04 and CentOS 7, with GNU awk and split(version >= 8.16)
+RepLong is used to find repetitive elements in the genome using long reads. It uses a fork of canu(https://github.com/marbl/canu/) and depends on R with library "igraph", python and faidx(https://pypi.python.org/pypi/pyfaidx). Please use faidx version 0.4.7.1, with the command "pip install pyfaidx==0.4.7.1". RepLong is tested on Linux Ubuntu 14.04 and CentOS 7, with GNU awk and split(version >= 8.16)
 
 ## Install:
 To install RepLong, follow the instruction below:
