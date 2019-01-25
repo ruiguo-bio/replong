@@ -66,11 +66,17 @@ def buildEdgeWithFrom(overlapfile,readlengthfile,threshold1,threshold2,threshold
 
 
 ovlfile = sys.argv[1]
+print("ovlfile is: ",ovlfile)
 lengthfile = sys.argv[2]
+print( "lengthfile is: ", lengthfile)
 threshold1 = int(sys.argv[3])
+print( "fromlength is: ", threshold1)
 threshold2 = int(sys.argv[4])
+print( "lendiff is: ", threshold2)
 threshold3 = float(sys.argv[5])
+print( "ratio is: ",threshold3)
 outfilename = sys.argv[6]
+print( "output_edge is: " ,outfilename)
 #threshold1 from
 #threshold2 total length
 #threshold3 repeat length ratio
