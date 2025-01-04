@@ -45,9 +45,9 @@ To use raw long reads:
 	./replong.sh -f dro_100k.fa -s 100M -t /2T/dro_100k -c true
 
 
-The human test file of 100k reads can be downloaded from https://drive.google.com/open?id=0B90UmIY8m2PYblAyQ0tnQ0E3MDA
+The human test file of 100k reads can be downloaded from https://drive.google.com/file/d/1XtLf3QKnH0Vm2hQyNJm1TWbw2rKvFGHD/view?usp=sharing
 
-The drosophila test file of 100k reads can be downloaded from https://drive.google.com/open?id=0B90UmIY8m2PYcTl6WVpyQmdfM3c
+The drosophila test file of 100k reads can be downloaded from https://drive.google.com/file/d/0B90UmIY8m2PYWWdhVjFpLXU3cFU
 
 The drosophila repeat result using raw sequences, 800k reads sampled from http://gembox.cbcb.umd.edu/mhap/raw/dmel_filtered.fastq.gz can be found on https://drive.google.com/open?id=0B90UmIY8m2PYWWdhVjFpLXU3cFU
 
